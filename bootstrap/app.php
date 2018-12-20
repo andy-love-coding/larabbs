@@ -1,5 +1,6 @@
 <?php
 
+require_once __DIR__.'/helper.php';  // 加载我们自定义的 辅助函数 存放的文件 helper.php
 /*
 |--------------------------------------------------------------------------
 | Create The Application

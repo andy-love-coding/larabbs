@@ -11,3 +11,19 @@
 |
 */
 Route::get('/', 'PagesController@root')->name('root');
+
+// Auth::routes(); // 这一条是 php artisan make:auth 生成的，其相当于以下 9 条路由。为了直观，注释这一条，用下面的 9 条。
+// Authentication Routes...
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('login', 'Auth\LoginController@login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+// Registration Routes...
+Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+Route::post('register', 'Auth\RegisterController@register');
+// Password Reset Routes...
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+
+// Route::get('/home', 'HomeController@index')->name('home'); // 这一条是 php artisan make:auth 生成的，由于我们自己已经设置了主页，注释这一条。

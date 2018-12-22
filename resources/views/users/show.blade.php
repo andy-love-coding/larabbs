@@ -29,16 +29,17 @@
                 <span>
                     <h1 class="panel-title pull-left" style="font-size:30px;">{{ $user->name }} <small>{{ $user->email }}</small></h1>
                 </span>
-            </div>
-            <hr>
+            </div>            
+        </div>
+        <hr>
 
-            {{-- 用户发布的内容 --}}
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    暂无数据 ~_~
-                </div>
+        {{-- 用户发布的内容 --}}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                暂无数据 ~_~
             </div>
-        </div>        
+        </div>
+                
     </div>
 </div>
 @stop

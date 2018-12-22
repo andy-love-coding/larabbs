@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\UserRequest;
+use App\Handlers\ImageUploadHandler;
 
 class UsersController extends Controller
 {
@@ -21,9 +22,21 @@ class UsersController extends Controller
     }
 
     // 更新用户资料
-    public function update(UserRequest $request, User $user)
+    public function update(UserRequest $request, ImageUploadHandler $uploader , User $user)
     {   
-        $user->update($request->all());
+        $data = $request->all();
+        // dd($data); // $data['avatar'] 的值为 UploadedFile 对象
+        // dd($request->avatar); // $request->avatar 的值也为 UploadedFile 对象
+
+        // 若上传图片成功，更新 $data['avatar'] 的值为图片地址
+        if ($request->avatar) {
+            $result = $uploader->save($request->avatar, 'avatars', $user->id, 400);
+            if ($result) {
+                $data['avatar'] = $result['path'];
+            }
+        }
+
+        $user->update($data);
         return redirect()->route('users.show', $user->id)->with('success', '个人资料更新成功！');
     }
 }

@@ -27,3 +27,9 @@ Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm
 Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
 // Route::get('/home', 'HomeController@index')->name('home'); // 这一条是 php artisan make:auth 生成的，由于我们自己已经设置了主页，注释这一条。
+
+Route::resource('users', 'UsersController',['only'=>['show','update','edit']]);
+// 上 1 条路由等同于以下 3 条路由
+// Route::get('users/{user}', 'UsersController@show')->name('users.show');
+// Route::get('users/{user}/edit', 'UsersController@edit')->name('users.edit');
+// Route::patch('users/{user}', 'UserController@update')->name('users.update');

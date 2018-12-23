@@ -29,8 +29,8 @@ class AddAvatarAndIntroductionToUsersTable extends Migration
     {
         // table()表示删除表中的字段
         Schema::table('users', function (Blueprint $table) {
-            $table->dropcColumn('avatar');
-            $table->dropcColumn('introduction');
+            $table->dropColumn('avatar');
+            $table->dropColumn('introduction');
         });
     }
 }

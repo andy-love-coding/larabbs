@@ -44,6 +44,8 @@ class Topic extends Model
         return $query->orderBy('updated_at', 'desc');
     }
 
+    // 在控制器中，Topic模型数据集合，也可以调用此排序方法，
+    // 如：$uesr->topics()->recent()->paginate(5); 意思是：得到某用户的话题，按创建时间最近的排序，每页 5 条。
     public function scopeRecent($query)
     {
         // 按照创建时间排序

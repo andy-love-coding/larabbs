@@ -26,9 +26,15 @@ class TopicsController extends Controller
 		$topics = $topic->withOrder($request->order)->paginate(20);
 		return view('topics.index', compact('topics'));
 	}
-
-    public function show(Topic $topic)
+	
+	public function show(Request $request, Topic $topic)
     {
+        // URL 矫正（第一次执行 show() 方法时，若 URL 不正确，矫正后，会再执行 show() 方法）
+        if ( ! empty($topic->slug) && $topic->slug != $request->slug) {
+            return redirect($topic->link(), 301);  // 301 永久重定向到正确的 URL
+        }
+
+		// 第一次执行 show() 方法时 URL 就正确，或 矫正后第二次执行 show() 方法时，执行以下 return 语句
         return view('topics.show', compact('topic'));
     }
 
@@ -45,7 +51,8 @@ class TopicsController extends Controller
 		$topic->user_id = Auth::id(); // 给实例 $topic 加一个属性 user_id ，并赋值为当前登录用户的id
 		$topic->save(); // 保存到数据库中, 
 		// dd($topic);		// 同时生成的id等也会返回更新到 $topic 实例中
-		return redirect()->route('topics.show', $topic->id)->with('success', '创建话题成功');
+		// return redirect()->route('topics.show', $topic->id)->with('success', '创建话题成功');
+		return redirect()->to($topic->link())->with('success', '创建话题成功');
 		
 	}
 
@@ -61,7 +68,8 @@ class TopicsController extends Controller
 		$this->authorize('update', $topic);
 		$topic->update($request->all());
 
-		return redirect()->route('topics.show', $topic->id)->with('success', '更新成功');
+		// return redirect()->route('topics.show', $topic->id)->with('success', '更新成功');
+		return redirect()->to($topic->link())->with('success', '更新成功');
 	}
 
 	public function destroy(Topic $topic)

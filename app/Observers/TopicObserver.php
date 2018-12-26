@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Topic;
+use App\Handlers\SlugTranslateHandler;
 
 // creating, created, updating, updated, saving,
 // saved,  deleting, deleted, restoring, restored
@@ -19,7 +20,7 @@ class TopicObserver
         //
     }
 
-    // 数据入库前：进行过滤(防止xss攻击，过滤掉危险代码)、属性赋值
+    // 数据入库前：进行过滤(防止xss攻击，过滤掉危险代码)、属性赋值（给 except、slut 等字段赋值）
     public function saving(Topic $topic)
     {
         // 虽然前端编辑器已经过滤了，但是后端 HTMLPurifier 服务器端过滤依然是必须的，因为前端过滤可以用 postman 绕过。
@@ -28,7 +29,12 @@ class TopicObserver
         $topic->body = clean($topic->body, 'user_topic_body'); 
         // $topic->title = clean($topic->title, 'user_topic_body'); // title 不用过滤，{{}}输出是会对html进行转义
         
-        // make_excerpt() 是在 bootsrap/helper.php 中自定义的辅助函数
+        // 生成话题摘录：make_excerpt() 是在 bootsrap/helper.php 中自定义的辅助函数
         $topic->excerpt = make_excerpt($topic->body);
+
+        // 如 slug 字段无内容，即使用翻译器对 title 进行翻译
+        if ( ! $topic->slug) {
+            $topic->slug = app(SlugTranslateHandler::class)->translate($topic->title);
+        }
     }
 }

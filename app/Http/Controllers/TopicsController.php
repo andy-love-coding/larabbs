@@ -45,7 +45,7 @@ class TopicsController extends Controller
 		$topic->user_id = Auth::id(); // 给实例 $topic 加一个属性 user_id ，并赋值为当前登录用户的id
 		$topic->save(); // 保存到数据库中, 
 		// dd($topic);		// 同时生成的id等也会返回更新到 $topic 实例中
-		return redirect()->route('topics.show', $topic->id)->with('message', '创建话题成功');
+		return redirect()->route('topics.show', $topic->id)->with('success', '创建话题成功');
 		
 	}
 
@@ -61,7 +61,7 @@ class TopicsController extends Controller
 		$this->authorize('update', $topic);
 		$topic->update($request->all());
 
-		return redirect()->route('topics.show', $topic->id)->with('message', '更新成功');
+		return redirect()->route('topics.show', $topic->id)->with('success', '更新成功');
 	}
 
 	public function destroy(Topic $topic)
@@ -69,7 +69,7 @@ class TopicsController extends Controller
 		$this->authorize('destroy', $topic);
 		$topic->delete();
 
-		return redirect()->route('topics.index')->with('message', '删除成功');
+		return redirect()->route('topics.index')->with('success', '删除成功');
 	}
 
 	public function uploadImage(Request $request, ImageUploadHandler $uploader)

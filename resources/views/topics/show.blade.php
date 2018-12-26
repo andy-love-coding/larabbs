@@ -45,12 +45,23 @@
 
                 <div class="operate">
                     <hr>
-                    <a href="{{ route('topics.edit', $topic->id) }}" class="btn btn-default btn-xs" role="button">
+                    <a href="{{ route('topics.edit', $topic->id) }}" class="btn btn-default btn-xs pull-left" role="button">
                         <i class="glyphicon glyphicon-edit"></i> 编辑
                     </a>
-                    <a href="#" class="btn btn-default btn-xs" role="button">
+                    <!-- 方式一：用 a 标签的 onclick 获取 fomr 表单来提交 -->
+                    <!-- <a href="#" class="btn btn-default btn-xs pull-left" role="button" style="margin-left: 6px" onclick="event.preventDefault();document.getElementById('delete_form').submit();">
                         <i class="glyphicon glyphicon-trash"></i> 删除
-                    </a>
+                    </a> -->
+
+                    <form id="delete_form" action="{{ route('topics.destroy', $topic->id) }}" method="post">
+                        {{ csrf_field() }}
+                        {{ method_field('DELETE') }}
+                        <!-- 方式二： button 的 submit 来直接提交 -->
+                        <button type="submit" class="btn btn-default btn-xs pull-left" style="margin-left: 6px">
+                            <i class="glyphicon glyphicon-trash"></i>
+                            删除
+                        </button>
+                    </form>
                 </div>
 
             </div>

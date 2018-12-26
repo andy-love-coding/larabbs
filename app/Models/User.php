@@ -35,4 +35,10 @@ class User extends Authenticatable
         // return $this->hasMany(Topic::class);
         return $this->hasMany(Topic::class,'user_id','id');
     }
+
+    // 用户授权：只有当前登录用户id 与 授权对象用户id 相等时才有权限
+    public function isAuthorOf($model)
+    {
+        return $this->id == $model->user_id;  // $this->id 表示当前登录用户id，$model->user_id 表示授权对象的用户id
+    }
 }

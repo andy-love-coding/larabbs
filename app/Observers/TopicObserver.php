@@ -3,11 +3,13 @@
 namespace App\Observers;
 
 use App\Models\Topic;
-use App\Handlers\SlugTranslateHandler;
+// use App\Handlers\SlugTranslateHandler;
+use App\Jobs\TranslateSlug;
 
 // creating, created, updating, updated, saving,
 // saved,  deleting, deleted, restoring, restored
 
+// Topic 模型监控器
 class TopicObserver
 {
     public function creating(Topic $topic)
@@ -33,8 +35,21 @@ class TopicObserver
         $topic->excerpt = make_excerpt($topic->body);
 
         // 如 slug 字段无内容，即使用翻译器对 title 进行翻译
-        if ( ! $topic->slug) {
-            $topic->slug = app(SlugTranslateHandler::class)->translate($topic->title);
+
+        // 不使用队列，直接同步进行翻译，对系统性能稳定性影响较大
+        // if ( ! $topic->slug) {
+        //     $topic->slug = app(SlugTranslateHandler::class)->translate($topic->title);
+        // }
+
+        
+    }
+
+    // 使用队列，队列任务需要序列化模型的ID，所以要在模型存入数据后，模型才会有id
+    public function saved(Topic $topic)
+    {
+        // 使用队列：推送任务到队列。有时间慢慢来做，不慌不忙。
+        if ( ! $topic->slug) {            
+            dispatch(new TranslateSlug($topic));  // 任务分发
         }
     }
 }

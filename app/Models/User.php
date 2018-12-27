@@ -4,10 +4,26 @@ namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Auth;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    // use Notifiable; // 原来只是简单使用 Notifiable ，现在需要在通知的时候，给用户表中的 notification_count 加 1
+    use Notifiable {
+        notify as protected laravelNotify;  // 使用 Notifiable trait ，并把它的 nofify() 方作为 User 类的一个别名方法
+    }
+    public function notify($instance)  // 在 User 类中，封装一个自定义的 nofity()，其实是对 Notifiable 中 nofity() 的重写
+    {
+        // 如果要通知的人是当前用户，就不必通知了！
+        if ($this->id == Auth::id()) {
+            return;
+        }
+        $this->increment('notification_count');
+
+        // 以上是自定义 nofity() 方法的逻辑代码；以下是调用真正的 notify() 方法（ 即 Notifiable trait 中的方法 ）
+
+        $this->laravelNotify($instance);
+    }
 
     /**
      * The attributes that are mass assignable.
@@ -47,5 +63,17 @@ class User extends Authenticatable
     public function isAuthorOf($model)
     {
         return $this->id == $model->user_id;  // $this->id 表示当前登录用户id，$model->user_id 表示授权对象的用户id
+    }
+
+    // 用户消息已读，需要做两个动作：更新用户表消息数量、更新消息通知表已读(read_at)时间
+    public function markAsRead() // 这是我们自定义的 markAsRead() 方法
+    {
+        // 1.0 消息已读时：将用户表中，用户消息的数量置零
+        $this->notification_count = 0;
+        $this->save();
+
+        // 2.0 unreadNotifications 是 Notifiable trait 的方法，获取未读消息集合，这个集合提供一个 markAsRead() 方法，
+        // 它可以批量的把未读消息集合标记为已读（即在 notifications 数据表中更新 read_at 字段，值为当前时间 ）
+        $this->unreadNotifications->markAsRead();  // 
     }
 }

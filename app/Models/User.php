@@ -36,6 +36,13 @@ class User extends Authenticatable
         return $this->hasMany(Topic::class,'user_id','id');
     }
 
+    // 用户关联话题：一个用户 对应 多个话题
+    public function replies()
+    {
+        // return $this->hasMany(Reply::class);
+        return $this->hasMany(Reply::class, 'user_id', 'id');
+    }
+
     // 用户授权：只有当前登录用户id 与 授权对象用户id 相等时才有权限
     public function isAuthorOf($model)
     {

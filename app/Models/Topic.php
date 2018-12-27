@@ -7,6 +7,13 @@ class Topic extends Model
     // 允许用户修改的字段
     protected $fillable = ['title', 'body', 'category_id', 'excerpt', 'slug'];
 
+    // 话题(帖子)关联回复：一个话题，拥有多个回复
+    public function replies()
+    {
+        // return $this->hasMany(Reply::class);
+        return $this->hasMany(Reply::class, 'topic_id', 'id');
+    }
+
     // 话题(帖子)关联分类：一个话题，属于一个分类
     public function category()
     {

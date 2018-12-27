@@ -40,8 +40,6 @@ class TopicObserver
         // if ( ! $topic->slug) {
         //     $topic->slug = app(SlugTranslateHandler::class)->translate($topic->title);
         // }
-
-        
     }
 
     // 使用队列，队列任务需要序列化模型的ID，所以要在模型存入数据后，模型才会有id

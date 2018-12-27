@@ -9,7 +9,9 @@ use Illuminate\Notifications\Messages\MailMessage;
 use App\Models\Reply;
 
 // 1.0 定义通知类
-class TopicReplied extends Notification
+// class TopicReplied extends Notification
+class TopicReplied extends Notification implements ShouldQueue 
+// Laravel 会检测 ShouldQueue 接口并自动将通知的发送放入队列中，所以我们不需要做其他修改。
 {
     use Queueable;
 
@@ -29,11 +31,12 @@ class TopicReplied extends Notification
      * @return array
      */
     public function via($notifiable)
-    {
-        // return ['mail'];
-        
-        // 开启通知的频道
-        return ['database'];
+    {        
+        // 开启通知的频道: 数据库频道
+        // return ['database'];
+
+        // 开启通知的频道：数据库频道、邮件频道
+        return ['database', 'mail'];
     }    
 
     public function toDatabase($notifiable)
@@ -52,5 +55,15 @@ class TopicReplied extends Notification
             'topic_id' => $topic->id,
             'topic_title' => $topic->title,
         ];
+    }
+
+    // 使用队列发送邮件时注意：修改了邮件参数后，重启队列服务，配置才会生效。
+    // 重启命令，如：php artisan horizon
+    public function toMail($notifiable)
+    {
+        $url = $this->reply->topic->link(['#reply' . $this->reply->id]);
+        return (new MailMessage)
+                    ->line('你的话题有新回复：'.$this->reply->content)
+                    ->action('查看回复', $url);
     }
 }

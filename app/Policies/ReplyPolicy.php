@@ -15,6 +15,6 @@ class ReplyPolicy extends Policy
 
     public function destroy(User $user, Reply $reply)
     {
-        return true;
+        return $user->isAuthorOf($reply);  // 只有自己可以删除自己的回复 
     }
 }

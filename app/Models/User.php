@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Auth;
+use Spatie\Permission\Traits\HasRoles; 
 
 class User extends Authenticatable
 {
+    use HasRoles; // laravel-permission 提供的 Trait —— HasRoles，能让我们获取到扩展包提供的所有：权限和角色的操作方法。
+
     // use Notifiable; // 原来只是简单使用 Notifiable ，现在需要在通知的时候，给用户表中的 notification_count 加 1
     use Notifiable {
         notify as protected laravelNotify;  // 使用 Notifiable trait ，并把它的 nofify() 方作为 User 类的一个别名方法

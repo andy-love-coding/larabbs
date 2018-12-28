@@ -38,5 +38,12 @@ class UsersTableSeeder extends Seeder
         $user->email = 'andy.liujin@foxmail.com';
         $user->avatar = 'https://iocaffcdn.phphub.org/uploads/images/201710/14/1/ZqM7iaP4CR.png?imageView2/1/w/200/h/200';
         $user->save();
+
+        // 初始化用户角色，将 1 号用户指派为『站长』
+        $user->assignRole('Founder');
+
+        // 将 2 号用户指派为『管理员』
+        $user = User::find(2);
+        $user->assignRole('Maintainer'); // assignRole() 方法在 HasRoles 中定义，我们已在 User 模型中加载了它。
     }
 }

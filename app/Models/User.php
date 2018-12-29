@@ -74,4 +74,32 @@ class User extends Authenticatable
         // 它可以批量的把未读消息集合标记为已读（即在 notifications 数据表中更新 read_at 字段，值为当前时间 ）
         $this->unreadNotifications->markAsRead();  // 
     }
+
+    // 定义一个 Eloquent 修改器 , 注意命名规范是 set{属性的驼峰式命名}Attribute,
+    // 当我们给属性赋值时，如 $user->password = 'password'，该修改器将被自动调用
+    public function setPasswordAttribute($value)
+    {
+        // ResetPasswordController 将重设密码的逻辑写在 ResetsPasswords trait 里，这个 trait 重置密码时已经将密码加密过了
+        // 如果值的长度等于 60，即认为是已经做过加密的情况
+        if (strlen($value) != 60) {
+
+            // 不等于 60，即认为没有加密过，做密码加密处理
+            $value = bcrypt($value);
+        }
+
+        $this->attributes['password'] = $value;
+    }
+
+    // 定义一个 Eloquent 修改器 , 当我们给属性赋值时，注意命名规范是 set{属性的驼峰式命名}Attribute
+    public function setAvatarAttribute($path)
+    {
+        // 如果不是 `http` 子串开头，那就是从后台上传的，需要补全 URL
+        if ( ! starts_with($path, 'http')) {
+
+            // 拼接完整的 URL
+            $path = config('app.url') . "/uploads/images/avatars/$path";
+        }
+
+        $this->attributes['avatar'] = $path;
+    }
 }

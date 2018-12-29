@@ -28,11 +28,6 @@ class User extends Authenticatable
         $this->laravelNotify($instance);
     }
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'name', 'email', 'password','introduction','avatar',
     ];

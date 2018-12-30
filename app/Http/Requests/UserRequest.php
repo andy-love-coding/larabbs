@@ -26,6 +26,9 @@ class UserRequest extends FormRequest
     public function rules()
     {
         return [
+            // unique:table,column,except,idColumn 意思为：
+            // 在 table 数据表里检查 column ，除了 idColumn 为 except 的数据。idColumn 的默认值是 “id”。
+            // 编辑自己的名称时，排除是否唯一时，需要把自己排除在对比范围外；新建时就不必排除了。
             'name' => 'required|between:3,25|regex:/^[A-Za-z0-9\-\_]+$/|unique:users,name,' . Auth::id(),
             'email' => 'required|email',
             'introduction' => 'max:80',

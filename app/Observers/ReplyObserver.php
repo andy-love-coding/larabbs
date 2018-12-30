@@ -8,6 +8,7 @@ use App\Notifications\TopicReplied;
 // creating, created, updating, updated, saving,
 // saved,  deleting, deleted, restoring, restored
 
+// Reply 模型监控器
 class ReplyObserver
 {
     // 新增一条回复时，话题的回复数 reply_count 加 1；并触发通知，通知作者

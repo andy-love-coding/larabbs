@@ -10,6 +10,7 @@ use App\Http\Requests\TopicRequest;
 use Auth;
 use App\Handlers\ImageUploadHandler;
 use App\Models\User;
+use App\Models\Link;
 
 class TopicsController extends Controller
 {
@@ -18,7 +19,7 @@ class TopicsController extends Controller
         $this->middleware('auth', ['except' => ['index', 'show']]);
     }
 
-	public function index(Request $request, Topic $topic, User $user)
+	public function index(Request $request, Topic $topic, User $user, Link $link)
 	{
 		// 用 with() 预加载 关联属性('user' 和 'category')
 		// $topics = Topic::with('user','category')->paginate(30);
@@ -26,8 +27,9 @@ class TopicsController extends Controller
 		// 增加了排序功能，注释掉上面一行代码
 		$topics = $topic->withOrder($request->order)->paginate(20);
 		$active_users = $user->getActiveUsers();
-		// dd($active_users);
-		return view('topics.index', compact('topics', 'active_users'));
+		$links = $link->getAllCached();
+		// dd($links);
+		return view('topics.index', compact('topics', 'active_users', 'links'));
 	}
 	
 	public function show(Request $request, Topic $topic)

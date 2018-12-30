@@ -49,7 +49,7 @@ return [
         'title' => [
             'title'    => '标题',
         ],
-        'user' => [
+        'user' => [  // user 是关联字段
             'title'              => '用户',
             'type'               => 'relationship',
             'name_field'         => 'name',

@@ -10,7 +10,7 @@ use App\Models\Reply;
 
 // 1.0 定义通知类
 // class TopicReplied extends Notification
-class TopicReplied extends Notification implements ShouldQueue 
+class TopicReplied extends Notification implements ShouldQueue  // 使用队列发通知
 // Laravel 会检测 ShouldQueue 接口并自动将通知的发送放入队列中，所以我们不需要做其他修改。
 {
     use Queueable;

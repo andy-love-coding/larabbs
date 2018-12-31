@@ -10,7 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', 'PagesController@root')->name('root');
+// Route::get('/', 'PagesController@root')->name('root');
+Route::get('/', 'TopicsController@index')->name('root');
+
 
 // Auth::routes(); // 这一条是 php artisan make:auth 生成的，其相当于以下 9 条路由。为了直观，注释这一条，用下面的 9 条。
 // Authentication Routes...
